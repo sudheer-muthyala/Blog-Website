@@ -15,7 +15,7 @@ class CreatePostForm(FlaskForm):
 
 # TODO: Create a RegisterForm to register new users
 class RegisterForm(FlaskForm):
-    email = StringField(label="Email", validators=[DataRequired(message="Invalid mail address"), Email()])
+    email = StringField(label="Email", validators=[DataRequired()])
     password = PasswordField(label="Password", validators=[DataRequired(message="Password should be at least 8 chars"),Length(min=8, max=20)])
     name = StringField(label="Name", validators=[DataRequired()])
     submit = SubmitField(label="Sign Me Up!")
@@ -23,7 +23,7 @@ class RegisterForm(FlaskForm):
 
 # TODO: Create a LoginForm to login existing users
 class LoginForm(FlaskForm):
-    email = StringField(label="Email", validators=[DataRequired(message="Invalid mail address"), Email()])
+    email = StringField(label="Email", validators=[DataRequired()])
     password = PasswordField(label="Password", validators=[DataRequired()])
     submit = SubmitField(label="Log me in!")
 

@@ -8,12 +8,12 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
-# Import your forms from the forms.py
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+import os
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 ckeditor = CKEditor(app)
 Bootstrap5(app)
 
@@ -37,7 +37,7 @@ def load_user(user_id):
 
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DB_URI", "sqlite:///posts.db")
 db = SQLAlchemy()
 db.init_app(app)
 
@@ -169,7 +169,8 @@ def show_post(post_id):
         else:
             flash("Please login to submit a comment")
             return redirect(url_for("login"))
-    return render_template("post.html", post=requested_post, form=comment_form, all_comments=comments, logged_in=current_user.is_authenticated)
+    return render_template("post.html", post=requested_post, form=comment_form, all_comments=comments,
+                           logged_in=current_user.is_authenticated)
 
 
 # TODO: Use a decorator so only an admin user can create a new post
@@ -236,18 +237,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
-
-
-
-
-
-
-# with app.app_context():
-#     new_user = User(
-#         email="admin@email.com",
-#         password=generate_password_hash("admin12345", method='pbkdf2:sha256', salt_length=8),
-#         name="admin"
-#     )
-#     db.session.add(new_user)
-#     db.session.commit()
+    app.run(debug=False, port=5002)
